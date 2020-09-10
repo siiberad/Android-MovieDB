@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
                     DetailMovieActivity.show(this@MainActivity, data?.id.toString())
                 }
             }
+            mvm.moviesAddAll.observe(this, {
+                movieAdapter.refreshAdapter(it)
+            })
+
             rv_movie.apply {
                 layoutManager = LinearLayoutManager(context)
                 movieAdapter.notifyDataSetChanged()
@@ -60,6 +64,8 @@ class MainActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
+                mvm.page = 1
+                rv_movie.removeAllViews()
                 mvm.getDataMoviewByGenre(list[position].id)
                 idSelected = list[position].id!!
             }

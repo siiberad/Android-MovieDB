@@ -7,6 +7,7 @@ import com.siiberad.moviedb.model.MovieByGenres
 import com.siiberad.moviedb.model.MovieGenres
 import com.siiberad.moviedb.model.Results
 import com.siiberad.moviedb.services.MovieService
+import com.siiberad.moviedb.view.adapter.MovieAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -24,7 +25,8 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     var totalPage = 0
 
     val genres = MutableLiveData<List<Genres>>()
-    val movies = MutableLiveData<List<Results>>()
+    val movies = MutableLiveData<ArrayList<Results>>()
+    val moviesAddAll = MutableLiveData<ArrayList<Results>>()
 
     fun getDataGenre() = fetchGenre()
 
@@ -64,7 +66,11 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
                     }
 
                     override fun onNext(t: MovieByGenres) {
-                        moviewByGenresRetrieved(t.results!!)
+                        if (page == 1) {
+                            moviewByGenresRetrieved(t.results!!)
+                        } else {
+                            moviePaging(t.results!!)
+                        }
                         totalPage = t.total_pages!!
                     }
 
@@ -73,10 +79,14 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         )
     }
 
-    private fun moviewByGenresRetrieved(g: List<Results>) {
+    private fun moviewByGenresRetrieved(g: ArrayList<Results>) {
         launch {
             movies.postValue(g)
         }
     }
-
+    private fun moviePaging(g: ArrayList<Results>) {
+        launch {
+            moviesAddAll.postValue(g)
+        }
+    }
 }

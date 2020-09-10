@@ -24,7 +24,6 @@ class DetailMovieActivity : AppCompatActivity(), YouTubePlayerCallback {
 
     private lateinit var dvm: DetailViewModel
     private lateinit var yt: YouTubePlayer
-    var id = ""
 
     companion object {
         fun show(source: Activity, id: String) {
@@ -41,12 +40,11 @@ class DetailMovieActivity : AppCompatActivity(), YouTubePlayerCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_movie)
         supportActionBar?.hide()
-        id = intent?.extras?.getString("ID").toString()
+        val id = intent?.extras?.getString("ID").toString()
         dvm = ViewModelProvider(this).get(DetailViewModel::class.java)
         dvm.getMovieData(id)
         observeViewModel()
         initView(id)
-        initListener()
     }
 
     private fun initView(id: String) {
@@ -113,22 +111,5 @@ class DetailMovieActivity : AppCompatActivity(), YouTubePlayerCallback {
 
     override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
         yt = youTubePlayer
-    }
-
-
-    private fun initListener() {
-        rv_review.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val countItem = linearLayoutManager.itemCount
-                val lastVisiblePosition =
-                    linearLayoutManager.findLastCompletelyVisibleItemPosition()
-                val isLastPosition = countItem.minus(1) == lastVisiblePosition
-                if (isLastPosition && dvm.page < dvm.totalPage) {
-                    dvm.page = dvm.page.plus(1)
-                    dvm.getReview(id)
-                }
-            }
-        })
     }
 }

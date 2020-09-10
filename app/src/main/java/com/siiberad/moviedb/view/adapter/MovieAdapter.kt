@@ -12,8 +12,7 @@ import com.siiberad.moviedb.R
 import com.siiberad.moviedb.model.Results
 import kotlinx.android.synthetic.main.list_item_film.view.*
 
-class MovieAdapter(private var data: List<Results>) : RecyclerView.Adapter<MovieAdapter.Holder>() {
-
+class MovieAdapter(private var data: ArrayList<Results>) : RecyclerView.Adapter<MovieAdapter.Holder>() {
     var mOnItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
@@ -54,5 +53,10 @@ class MovieAdapter(private var data: List<Results>) : RecyclerView.Adapter<Movie
                 )
                 .into(itemView.imgPhoto)
         }
+    }
+
+    fun refreshAdapter(resultTheMovieDb: List<Results>) {
+        this.data.addAll(resultTheMovieDb)
+        notifyItemRangeChanged(0, this.data.size)
     }
 }
