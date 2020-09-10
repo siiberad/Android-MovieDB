@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,13 +38,13 @@ class MainActivity : AppCompatActivity() {
         })
 
         mvm.movies.observe(this, { movies ->
-            val movieAdapter = MovieAdapter(movies)
+            val movieAdapter = MovieAdapter(movies as ArrayList<Results>)
             movieAdapter.mOnItemClickListener = object : MovieAdapter.OnItemClickListener {
                 override fun onClick(data: Results?) {
                     DetailMovieActivity.show(this@MainActivity, data?.id.toString())
                 }
             }
-            mvm.moviesAddAll.observe(this, {
+            mvm.moviesAdd.observe(this, {
                 movieAdapter.refreshAdapter(it)
             })
 
