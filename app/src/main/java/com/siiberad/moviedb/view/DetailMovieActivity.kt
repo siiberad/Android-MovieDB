@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -94,8 +94,12 @@ class DetailMovieActivity : AppCompatActivity(), YouTubePlayerCallback {
         dvm.trailer.observe(this, {
             if (expandable_layout.isExpanded) {
                 youtube_player_view.getYouTubePlayerWhenReady(this)
-                kotlin.run { yt.loadVideo(it, 0f) }
-                yt.play()
+                if (!it.isNullOrEmpty()) {
+                    kotlin.run { yt.loadVideo(it, 0f) }
+                    yt.play()
+                } else {
+                    Toast.makeText(this, "Trailer tidak tersedia", Toast.LENGTH_SHORT).show()
+                }
             }
         })
 
